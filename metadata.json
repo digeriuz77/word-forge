@@ -1,0 +1,5 @@
+{
+  "name": "Academic Word Forge",
+  "description": "An interactive web application for EAL students in Years 7 & 8 to master academic vocabulary. It features a 16-week plan with various activities like Frayer Models, charades, and word sorts, integrating L1 support and spaced repetition principles to enhance learning and retention.",
+  "requestFramePermissions": []
+}
