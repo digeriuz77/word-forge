@@ -28,7 +28,8 @@ export interface MorphologyBuilderData {
 export interface WordConstructionData {
   type: 'WordConstruction';
   targets: {
-    definition: string;
+    literalMeaning: string;  // e.g., "to carry apart"
+    definition: string;      // e.g., "to be unlike; to not be the same"
     parts: string[];
   }[];
   allParts: string[];
