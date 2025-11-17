@@ -436,18 +436,32 @@ export default function App() {
   const [showRecall, setShowRecall] = useState(false);
 
   const weekData = useMemo(() => WEEK_DATA.find(w => w.week === currentWeek) as WeekData, [currentWeek]);
-  const allVocabulary = useMemo(() => WEEK_DATA.flatMap(w => w.vocabulary), []);
+  const allVocabulary = useMemo(() =>
+    WEEK_DATA
+      .filter(w => w.week <= currentWeek)
+      .flatMap(w => w.vocabulary),
+    [currentWeek]
+  );
 
   useEffect(() => {
-      const allWordsInWeek = [
-          ...weekData.vocabulary.map(v => v.term),
-          ...weekData.morphology.examples.map(e => e.word)
-      ];
-      const uniqueWords = [...new Set(allWordsInWeek)];
-      setReviewItems(
-          uniqueWords.map(term => ({ term, rule: false, relate: false, test: false }))
-      );
-  }, [weekData]);
+      // Get all words from current week and all previous weeks
+      const allWordsUpToCurrentWeek = WEEK_DATA
+          .filter(w => w.week <= currentWeek)
+          .flatMap(w => [
+              ...w.vocabulary.map(v => v.term),
+              ...w.morphology.examples.map(e => e.word)
+          ]);
+      const uniqueWords = [...new Set(allWordsUpToCurrentWeek)];
+
+      // Preserve existing progress for words we already have
+      setReviewItems(prev => {
+          const existingProgress = new Map(prev.map(item => [item.term.toLowerCase(), item]));
+          return uniqueWords.map(term => {
+              const existing = existingProgress.get(term.toLowerCase());
+              return existing || { term, rule: false, relate: false, test: false };
+          });
+      });
+  }, [currentWeek]);
 
   const updateReviewItem = useCallback((term: string, key: 'rule' | 'relate' | 'test', value: boolean) => {
       setReviewItems(prev => {
@@ -464,15 +478,8 @@ export default function App() {
   };
   
   const renderWeekPage = () => {
-    switch(currentWeek) {
-        case 1:
-            return <Week1Page weekData={weekData} l1Support={showL1Support} onReviewUpdate={updateReviewItem} />;
-        // Future weeks can be added here
-        // case 2:
-        //     return <Week2Page ... />;
-        default:
-            return <div className="bg-white/80 p-6 rounded-xl shadow-lg text-center text-gray-600">This week's content is under construction. Please select another week.</div>
-    }
+    // All weeks use the same page component with different data
+    return <Week1Page weekData={weekData} l1Support={showL1Support} onReviewUpdate={updateReviewItem} />;
   }
 
   return (
