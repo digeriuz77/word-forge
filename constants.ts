@@ -87,15 +87,15 @@ export const WEEK_DATA: WeekData[] = [
        {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To build something together.', parts: ['con', 'struct'] },
-          { definition: 'To give instructions; to teach.', parts: ['in', 'struct'] },
-          { definition: 'The person that gives instructions.', parts: ['in', 'struct', 'or'] },
-          { definition: 'Causing great damage.', parts: ['de', 'struct', 'ive'] },
-          { definition: 'The building site is a _________ site.', parts: ['con', 'struct', 'ion'] },
-          { definition: 'The lesson is very ______________ (adjective).', parts: ['in', 'struct', 'ive'] },
-          { definition: 'To build again.', parts: ['re', 'con', 'struct'] },
-          { definition: 'He had _________________ surgery to rebuild his face', parts: ['re', 'con', 'struct', 'ive'] },
-          { definition: 'When there is a fire, follow the __________', parts: ['in', 'struct', 'ion'] }
+          { literalMeaning: 'to build together', definition: 'to build something together', parts: ['con', 'struct'] },
+          { literalMeaning: 'to build into', definition: 'to give instructions; to teach', parts: ['in', 'struct'] },
+          { literalMeaning: 'person who builds into', definition: 'the person that gives instructions', parts: ['in', 'struct', 'or'] },
+          { literalMeaning: 'building in a down/destructive way', definition: 'causing great damage', parts: ['de', 'struct', 'ive'] },
+          { literalMeaning: 'the act of building together', definition: 'a building site (noun)', parts: ['con', 'struct', 'ion'] },
+          { literalMeaning: 'relating to building into', definition: 'helpful for teaching (adjective)', parts: ['in', 'struct', 'ive'] },
+          { literalMeaning: 'to build together again', definition: 'to rebuild or reorganize', parts: ['re', 'con', 'struct'] },
+          { literalMeaning: 'building together again in a helpful way', definition: 'helpful in rebuilding', parts: ['re', 'con', 'struct', 'ive'] },
+          { literalMeaning: 'the act of building into', definition: 'directions or orders', parts: ['in', 'struct', 'ion'] }
         ],
         allParts: ['struct', 'con', 'in', 'or', 'de', 're', 'ive', 'ion']
       },
@@ -247,11 +247,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To look into something carefully', parts: ['in', 'spect'] },
-          { definition: 'A person who looks into things', parts: ['in', 'spect', 'or'] },
-          { definition: 'To look out for something', parts: ['ex', 'spect'] },
-          { definition: 'Looking back with admiration', parts: ['re', 'spect'] },
-          { definition: 'The act of looking carefully', parts: ['in', 'spect', 'ion'] },
+          { literalMeaning: 'to look into', definition: 'To look into something carefully', parts: ['in', 'spect'] },
+          { literalMeaning: 'person who looks into', definition: 'A person who looks into things', parts: ['in', 'spect', 'or'] },
+          { literalMeaning: 'to look out', definition: 'To look out for something', parts: ['ex', 'spect'] },
+          { literalMeaning: 'to look back', definition: 'Looking back with admiration', parts: ['re', 'spect'] },
+          { literalMeaning: 'the act of looking into', definition: 'The act of looking carefully', parts: ['in', 'spect', 'ion'] },
         ],
         allParts: ['spect', 'in', 'ex', 're', 'or', 'ion']
       },
@@ -377,10 +377,10 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'Things that follow in order', parts: ['sequ', 'ence'] },
-          { definition: 'Following together as a result', parts: ['con', 'sequ', 'ence'] },
-          { definition: 'Coming after something', parts: ['sub', 'sequ', 'ent'] },
-          { definition: 'In a following order', parts: ['sequ', 'ent', 'al'] },
+          { literalMeaning: 'the state of following', definition: 'Things that follow in order', parts: ['sequ', 'ence'] },
+          { literalMeaning: 'the state of following together', definition: 'Following together as a result', parts: ['con', 'sequ', 'ence'] },
+          { literalMeaning: 'following after', definition: 'Coming after something', parts: ['sub', 'sequ', 'ent'] },
+          { literalMeaning: 'relating to following', definition: 'In a following order', parts: ['sequ', 'ent', 'al'] },
         ],
         allParts: ['sequ', 'con', 'sub', 'ence', 'ent', 'al']
       },
@@ -508,11 +508,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To carry apart; to be unlike', parts: ['dif', 'fer'] },
-          { definition: 'The state of being unlike', parts: ['dif', 'fer', 'ence'] },
-          { definition: 'To carry before; to like better', parts: ['pre', 'fer'] },
-          { definition: 'To carry across', parts: ['trans', 'fer'] },
-          { definition: 'Not the same', parts: ['dif', 'fer', 'ent'] },
+          { literalMeaning: 'to carry apart', definition: 'To carry apart; to be unlike', parts: ['dif', 'fer'] },
+          { literalMeaning: 'the state of being carried apart', definition: 'The state of being unlike', parts: ['dif', 'fer', 'ence'] },
+          { literalMeaning: 'to carry before', definition: 'To carry before; to like better', parts: ['pre', 'fer'] },
+          { literalMeaning: 'to carry across', definition: 'To carry across', parts: ['trans', 'fer'] },
+          { literalMeaning: 'carrying apart', definition: 'Not the same', parts: ['dif', 'fer', 'ent'] },
         ],
         allParts: ['fer', 'dif', 'pre', 'trans', 're', 'ence', 'ent']
       },
@@ -636,10 +636,10 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'The work or role something does', parts: ['funct', 'ion'] },
-          { definition: 'Working correctly', parts: ['funct', 'ion', 'al'] },
-          { definition: 'Working badly', parts: ['dys', 'funct', 'ion'] },
-          { definition: 'Working wrongly; a breakdown', parts: ['mal', 'funct', 'ion'] },
+          { literalMeaning: 'the act of performing', definition: 'The work or role something does', parts: ['funct', 'ion'] },
+          { literalMeaning: 'relating to performing', definition: 'Working correctly', parts: ['funct', 'ion', 'al'] },
+          { literalMeaning: 'bad performing', definition: 'Working badly', parts: ['dys', 'funct', 'ion'] },
+          { literalMeaning: 'wrong performing', definition: 'Working wrongly; a breakdown', parts: ['mal', 'funct', 'ion'] },
         ],
         allParts: ['funct', 'dys', 'mal', 'ion', 'al']
       },
@@ -763,10 +763,10 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'The study of life', parts: ['bio', 'logy'] },
-          { definition: 'The zone of life on Earth', parts: ['bio', 'sphere'] },
-          { definition: 'Study of small life forms', parts: ['micro', 'bio', 'logy'] },
-          { definition: 'A tiny living thing', parts: ['micro', 'bio'] },
+          { literalMeaning: 'the study of life', definition: 'The study of life', parts: ['bio', 'logy'] },
+          { literalMeaning: 'the sphere of life', definition: 'The zone of life on Earth', parts: ['bio', 'sphere'] },
+          { literalMeaning: 'the study of small life', definition: 'Study of small life forms', parts: ['micro', 'bio', 'logy'] },
+          { literalMeaning: 'small life', definition: 'A tiny living thing', parts: ['micro', 'bio'] },
         ],
         allParts: ['bio', 'micro', 'macro', 'logy', 'sphere']
       },
@@ -891,10 +891,10 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'A visual showing data', parts: ['graph'] },
-          { definition: 'Related to pictures or drawing', parts: ['graph', 'ic'] },
-          { definition: 'A drawing showing how something works', parts: ['dia', 'gram'] },
-          { definition: 'Writing from far away', parts: ['tele', 'graph'] },
+          { literalMeaning: 'writing/drawing', definition: 'A visual showing data', parts: ['graph'] },
+          { literalMeaning: 'relating to writing/drawing', definition: 'Related to pictures or drawing', parts: ['graph', 'ic'] },
+          { literalMeaning: 'drawing across', definition: 'A drawing showing how something works', parts: ['dia', 'gram'] },
+          { literalMeaning: 'writing from far', definition: 'Writing from far away', parts: ['tele', 'graph'] },
         ],
         allParts: ['graph', 'gram', 'dia', 'para', 'tele', 'ic']
       },
@@ -1021,11 +1021,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To write about in detail', parts: ['de', 'scribe'] },
-          { definition: 'A written account', parts: ['de', 'script', 'ion'] },
-          { definition: 'To write on something', parts: ['in', 'scribe'] },
-          { definition: 'To write orders beforehand', parts: ['pre', 'scribe'] },
-          { definition: 'Writing under; signing up', parts: ['sub', 'script', 'ion'] },
+          { literalMeaning: 'to write down', definition: 'To write about in detail', parts: ['de', 'scribe'] },
+          { literalMeaning: 'the act of writing down', definition: 'A written account', parts: ['de', 'script', 'ion'] },
+          { literalMeaning: 'to write in/on', definition: 'To write on something', parts: ['in', 'scribe'] },
+          { literalMeaning: 'to write before', definition: 'To write orders beforehand', parts: ['pre', 'scribe'] },
+          { literalMeaning: 'writing under', definition: 'Writing under; signing up', parts: ['sub', 'script', 'ion'] },
         ],
         allParts: ['scribe', 'script', 'de', 'in', 'pre', 'sub', 'ion', 'ive']
       },
@@ -1151,11 +1151,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To turn inside; flip', parts: ['in', 'vert'] },
-          { definition: 'Animal without backbone', parts: ['in', 'vert', 'ebr', 'ate'] },
-          { definition: 'To turn back', parts: ['re', 'verse'] },
-          { definition: 'To turn away', parts: ['di', 'vert'] },
-          { definition: 'To change form (turn with)', parts: ['con', 'vert'] },
+          { literalMeaning: 'to turn inside', definition: 'To turn inside; flip', parts: ['in', 'vert'] },
+          { literalMeaning: 'not turned in (no backbone)', definition: 'Animal without backbone', parts: ['in', 'vert', 'ebr', 'ate'] },
+          { literalMeaning: 'to turn back', definition: 'To turn back', parts: ['re', 'verse'] },
+          { literalMeaning: 'to turn away', definition: 'To turn away', parts: ['di', 'vert'] },
+          { literalMeaning: 'to turn together', definition: 'To change form (turn with)', parts: ['con', 'vert'] },
         ],
         allParts: ['vert', 'verse', 'in', 're', 'di', 'con', 'ebr', 'ate']
       },
@@ -1282,11 +1282,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To lead into; present for first time', parts: ['intro', 'duce'] },
-          { definition: 'The act of presenting', parts: ['intro', 'duct', 'ion'] },
-          { definition: 'To lead back; make smaller', parts: ['re', 'duce'] },
-          { definition: 'To lead forward; create', parts: ['pro', 'duce'] },
-          { definition: 'Creating good results', parts: ['pro', 'duct', 'ive'] },
+          { literalMeaning: 'to lead into', definition: 'To lead into; present for first time', parts: ['intro', 'duce'] },
+          { literalMeaning: 'the act of leading into', definition: 'The act of presenting', parts: ['intro', 'duct', 'ion'] },
+          { literalMeaning: 'to lead back', definition: 'To lead back; make smaller', parts: ['re', 'duce'] },
+          { literalMeaning: 'to lead forward', definition: 'To lead forward; create', parts: ['pro', 'duce'] },
+          { literalMeaning: 'relating to leading forward', definition: 'Creating good results', parts: ['pro', 'duct', 'ive'] },
         ],
         allParts: ['duce', 'duct', 'intro', 're', 'pro', 'ion', 'ive']
       },
@@ -1413,11 +1413,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To receive through the senses', parts: ['per', 'ceive'] },
-          { definition: 'The act of receiving information', parts: ['per', 'cept', 'ion'] },
-          { definition: 'Good at receiving information', parts: ['per', 'cept', 'ive'] },
-          { definition: 'An idea received together', parts: ['con', 'cept'] },
-          { definition: 'Able to be received', parts: ['re', 'ceive', 'able'] },
+          { literalMeaning: 'to receive through', definition: 'To receive through the senses', parts: ['per', 'ceive'] },
+          { literalMeaning: 'the act of receiving through', definition: 'The act of receiving information', parts: ['per', 'cept', 'ion'] },
+          { literalMeaning: 'relating to receiving through', definition: 'Good at receiving information', parts: ['per', 'cept', 'ive'] },
+          { literalMeaning: 'taking together', definition: 'An idea received together', parts: ['con', 'cept'] },
+          { literalMeaning: 'able to be received back', definition: 'Able to be received', parts: ['re', 'ceive', 'able'] },
         ],
         allParts: ['ceive', 'cept', 'per', 'con', 'de', 're', 'ion', 'ive', 'able']
       },
@@ -1542,11 +1542,11 @@ export const WEEK_DATA: WeekData[] = [
       {
         type: 'WordConstruction',
         targets: [
-          { definition: 'To find an answer', parts: ['solve'] },
-          { definition: 'An answer to a problem', parts: ['solut', 'ion'] },
-          { definition: 'To solve again or settle', parts: ['re', 'solve'] },
-          { definition: 'To break apart in liquid', parts: ['dis', 'solve'] },
-          { definition: 'Can be solved', parts: ['solv', 'able'] },
+          { literalMeaning: 'to loosen', definition: 'To find an answer', parts: ['solve'] },
+          { literalMeaning: 'the act of loosening', definition: 'An answer to a problem', parts: ['solut', 'ion'] },
+          { literalMeaning: 'to loosen again', definition: 'To solve again or settle', parts: ['re', 'solve'] },
+          { literalMeaning: 'to loosen apart', definition: 'To break apart in liquid', parts: ['dis', 'solve'] },
+          { literalMeaning: 'able to be loosened', definition: 'Can be solved', parts: ['solv', 'able'] },
         ],
         allParts: ['solve', 'solv', 'solut', 're', 'dis', 'ion', 'able']
       },

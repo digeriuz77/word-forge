@@ -152,7 +152,7 @@ const ProgressBar = ({ value, label }: { value: number; label: string }) => (
 // --- WEEK 1 PAGE COMPONENT ---
 
 const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (term: string, key: 'rule' | 'relate' | 'test', value: boolean) => void; }> = ({ weekData, l1Support, onReviewUpdate }) => {
-    
+
     // --- STATE MANAGEMENT ---
 
     const [progress, setProgress] = useState({
@@ -168,13 +168,14 @@ const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (t
         const totalCount = Object.keys(progress).length;
         return (completedCount / totalCount) * 100;
     }, [progress]);
-    
+
     // Morphology Builder State
     const [builtWord, setBuiltWord] = useState<{ word: string, definition: string } | null>(null);
 
     // Word Construction State
     const [constructionIndex, setConstructionIndex] = useState(0);
     const [droppedParts, setDroppedParts] = useState<string[]>([]);
+    const [selectedPart, setSelectedPart] = useState<string | null>(null); // For click-to-place
     const [constructionFeedback, setConstructionFeedback] = useState<'correct' | 'incorrect' | null>(null);
     const [constructionComplete, setConstructionComplete] = useState(false);
     const constructionData = weekData.contextualActivities.find(a => a.type === 'WordConstruction') as WordConstructionData;
@@ -199,8 +200,29 @@ const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (t
     const analogyData = weekData.contextualActivities.find(a => a.type === 'Analogy') as AnalogyData;
     const analogyOptions = useMemo(() => [...analogyData.distractors, analogyData.correctAnswer].sort(() => Math.random() - 0.5), [analogyData]);
 
+    // --- HELPER FUNCTIONS ---
+
+    // Get meaning of a morpheme part
+    const getPartMeaning = (part: string): string => {
+        const prefix = weekData.morphology.prefixes.find(p => p.text === part || p.text === part + '-');
+        if (prefix) return prefix.meaning;
+        const suffix = weekData.morphology.suffixes.find(s => s.text === part || s.text === '-' + part);
+        if (suffix) return suffix.meaning;
+        if (part.toLowerCase() === weekData.morphology.root.text.toLowerCase()) {
+            return weekData.morphology.root.meaning;
+        }
+        // Check if it's a variant of the root
+        if (weekData.morphology.root.text.includes('/')) {
+            const rootVariants = weekData.morphology.root.text.split('/');
+            if (rootVariants.some(v => v.toLowerCase() === part.toLowerCase())) {
+                return weekData.morphology.root.meaning;
+            }
+        }
+        return '';
+    };
+
     // --- EVENT HANDLERS ---
-    
+
     // Generic Drag-and-Drop Handlers
     const handleDragStart = (e: React.DragEvent<HTMLElement>, data: string) => {
         e.dataTransfer.setData("text/plain", data);
@@ -209,13 +231,36 @@ const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (t
         e.preventDefault();
     };
 
-    // Word Construction Handlers
+    // Word Construction Handlers - supports both drag-and-drop and click-to-place
     const handleConstructionDrop = (e: React.DragEvent<HTMLElement>) => {
         e.preventDefault();
         const part = e.dataTransfer.getData("text/plain");
         if (part && !droppedParts.includes(part)) {
             setDroppedParts(prev => [...prev, part]);
+            setSelectedPart(null);
         }
+    };
+
+    const handlePartClick = (part: string) => {
+        if (constructionFeedback) return; // Don't allow changes after feedback
+        if (droppedParts.includes(part)) return; // Don't select already placed parts
+        if (selectedPart === part) {
+            setSelectedPart(null); // Deselect
+        } else {
+            setSelectedPart(part);
+        }
+    };
+
+    const handleDropZoneClick = () => {
+        if (selectedPart && !droppedParts.includes(selectedPart)) {
+            setDroppedParts(prev => [...prev, selectedPart]);
+            setSelectedPart(null);
+        }
+    };
+
+    const handleRemovePart = (partToRemove: string) => {
+        if (constructionFeedback) return; // Don't allow changes after feedback
+        setDroppedParts(prev => prev.filter(p => p !== partToRemove));
     };
 
     const checkConstruction = () => {
@@ -266,7 +311,37 @@ const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (t
             {/* Section 1: Morphology Lab */}
             <section className="bg-white/80 p-6 rounded-xl shadow-lg">
                 <h3 className="text-2xl font-bold text-gray-800 border-b-2 border-orange-400 pb-2 mb-4">Morphology Lab: The Root <span className="text-orange-500">'{weekData.morphology.root.text}'</span></h3>
-                <p className="text-gray-600 mb-4">The Latin root <strong className="font-semibold text-gray-700">'{weekData.morphology.root.text}'</strong> means <strong className="font-semibold text-gray-700">'{weekData.morphology.root.meaning}'</strong>. See how it combines with prefixes and suffixes to make new words.</p>
+                <p className="text-gray-600 mb-4">
+                    The root <strong className="font-semibold text-gray-700">'{weekData.morphology.root.text}'</strong> means <strong className="font-semibold text-gray-700">'{weekData.morphology.root.meaning}'</strong>. See how it combines with prefixes and suffixes to make new words.
+                    {l1Support && <span className="block mt-2 text-sm text-gray-500 italic">Akar kata '{weekData.morphology.root.text}' bermaksud '{weekData.morphology.root.meaning}'</span>}
+                </p>
+
+                {/* Show available prefixes and suffixes with meanings */}
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">Available Prefixes:</p>
+                    <div className="flex flex-wrap gap-2">
+                        {weekData.morphology.prefixes.map(prefix => (
+                            <span key={prefix.text} className="group relative inline-block bg-blue-200 text-blue-900 px-2 py-1 rounded text-sm font-medium cursor-help">
+                                {prefix.text}
+                                <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-10">
+                                    {prefix.meaning}
+                                </span>
+                            </span>
+                        ))}
+                    </div>
+                    <p className="text-sm font-semibold text-gray-700 mb-2 mt-3">Available Suffixes:</p>
+                    <div className="flex flex-wrap gap-2">
+                        {weekData.morphology.suffixes.map(suffix => (
+                            <span key={suffix.text} className="group relative inline-block bg-purple-200 text-purple-900 px-2 py-1 rounded text-sm font-medium cursor-help">
+                                {suffix.text}
+                                <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-10">
+                                    {suffix.partOfSpeech}
+                                </span>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+
                 <div className="flex flex-wrap gap-2">
                     {weekData.morphology.examples.map(ex => (
                         <button key={ex.word} onClick={() => { setBuiltWord(ex); setProgress(p => ({ ...p, morphology: true })) }} className="bg-blue-100 text-blue-800 font-semibold px-3 py-1 rounded-full hover:bg-blue-200 hover:scale-105 transition-transform">
@@ -287,37 +362,97 @@ const Week1Page: FC<{ weekData: WeekData; l1Support: boolean; onReviewUpdate: (t
                 <h3 className="text-2xl font-bold text-gray-800 border-b-2 border-cyan-400 pb-2 mb-4">Word Construction Zone</h3>
                  {!constructionComplete ? (
                     <>
-                        <p className="text-gray-600 mb-4">Drag the morphemes to build a word that means: <strong className="text-gray-800">"{currentConstructionTarget.definition}"</strong></p>
-                        <div onDragOver={handleDragOver} onDrop={handleConstructionDrop} className="flex items-center justify-center gap-1 bg-gray-200 p-4 rounded-lg min-h-[60px] border-2 border-dashed border-gray-400 mb-4">
-                            {droppedParts.map(p => <span key={p} className="bg-cyan-500 text-white font-bold px-3 py-1 rounded-md text-lg">{p}</span>)}
+                        <div className="mb-4 p-4 bg-cyan-50 rounded-lg border-l-4 border-cyan-500">
+                            <p className="text-sm text-gray-600 mb-2">
+                                <span className="font-semibold">Literal meaning:</span> {currentConstructionTarget.literalMeaning}
+                                {l1Support && <span className="block mt-1 text-gray-500 italic text-xs">Makna harfiah: {currentConstructionTarget.literalMeaning}</span>}
+                            </p>
+                            <p className="text-gray-800">
+                                <span className="font-semibold">Build a word that means:</span> <strong className="text-cyan-700">"{currentConstructionTarget.definition}"</strong>
+                                {l1Support && <span className="block mt-1 text-gray-600 italic text-sm">Bina perkataan yang bermaksud: "{currentConstructionTarget.definition}"</span>}
+                            </p>
                         </div>
+
+                        <p className="text-sm text-gray-500 mb-3 text-center">
+                            {selectedPart ? '👆 Click the box below to place the selected morpheme, or click a morpheme to deselect' : '💡 Drag morphemes or click to select, then click the box to place them'}
+                        </p>
+
+                        <div
+                            onDragOver={handleDragOver}
+                            onDrop={handleConstructionDrop}
+                            onClick={handleDropZoneClick}
+                            className="flex items-center justify-center gap-1 bg-gray-200 p-4 rounded-lg min-h-[60px] border-2 border-dashed border-gray-400 mb-4 cursor-pointer hover:bg-gray-100 transition-colors"
+                        >
+                            {droppedParts.length === 0 ? (
+                                <span className="text-gray-400 italic">Drop or click morphemes here</span>
+                            ) : (
+                                droppedParts.map(p => (
+                                    <span
+                                        key={p}
+                                        onClick={(e) => { e.stopPropagation(); handleRemovePart(p); }}
+                                        className="group relative bg-cyan-500 text-white font-bold px-3 py-1 rounded-md text-lg cursor-pointer hover:bg-cyan-600 transition-colors"
+                                        title="Click to remove"
+                                    >
+                                        {p}
+                                        <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-10">
+                                            {getPartMeaning(p) || p}
+                                        </span>
+                                    </span>
+                                ))
+                            )}
+                        </div>
+
                         <div className="flex flex-wrap gap-2 justify-center mb-4">
-                            {constructionData.allParts.map(part => (
-                                <button key={part} draggable onDragStart={(e) => handleDragStart(e, part)} className="bg-white shadow-md p-2 rounded-md font-semibold text-gray-700 cursor-grab active:cursor-grabbing hover:bg-cyan-100">{part}</button>
-                            ))}
+                            {constructionData.allParts.map(part => {
+                                const isPlaced = droppedParts.includes(part);
+                                const isSelected = selectedPart === part;
+                                const partMeaning = getPartMeaning(part);
+                                return (
+                                    <button
+                                        key={part}
+                                        draggable={!isPlaced}
+                                        onDragStart={(e) => !isPlaced && handleDragStart(e, part)}
+                                        onClick={() => handlePartClick(part)}
+                                        disabled={isPlaced}
+                                        className={`group relative p-2 rounded-md font-semibold transition-all ${
+                                            isPlaced ? 'bg-gray-200 text-gray-400 cursor-not-allowed opacity-50' :
+                                            isSelected ? 'bg-cyan-500 text-white shadow-lg ring-2 ring-cyan-600 scale-110' :
+                                            'bg-white shadow-md text-gray-700 cursor-pointer hover:bg-cyan-100 active:cursor-grabbing'
+                                        }`}
+                                    >
+                                        {part}
+                                        {!isPlaced && partMeaning && (
+                                            <span className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap z-10">
+                                                {partMeaning}
+                                            </span>
+                                        )}
+                                    </button>
+                                );
+                            })}
                         </div>
+
                         <div className="text-center">
                             {constructionFeedback === null ? (
                                 <>
                                     <button onClick={checkConstruction} className="bg-cyan-500 hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg mr-2">Check</button>
-                                    <button onClick={() => setDroppedParts([])} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">Clear</button>
+                                    <button onClick={() => { setDroppedParts([]); setSelectedPart(null); }} className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">Clear</button>
                                 </>
                             ) : constructionFeedback === 'correct' ? (
                                 <div className="p-3 rounded-lg animate-fade-in bg-green-100 text-green-800">
-                                    <p className="font-bold">Correct!</p>
+                                    <p className="font-bold">Correct! {l1Support && <span className="text-sm">(Betul!)</span>}</p>
                                     <button onClick={nextConstruction} className="mt-2 bg-green-500 hover:bg-green-600 text-white font-bold py-1 px-3 rounded-full">Next Target &rarr;</button>
                                 </div>
                             ) : (
                                 <div className="p-3 rounded-lg animate-fade-in bg-red-100 text-red-800">
-                                    <p className="font-bold">Not quite, try again!</p>
-                                    <button onClick={() => { setConstructionFeedback(null); setDroppedParts([]); }} className="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-full">Try Again</button>
+                                    <p className="font-bold">Not quite, try again! {l1Support && <span className="text-sm">(Cuba lagi!)</span>}</p>
+                                    <button onClick={() => { setConstructionFeedback(null); setDroppedParts([]); setSelectedPart(null); }} className="mt-2 bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-full">Try Again</button>
                                 </div>
                             )}
                         </div>
                     </>
                 ) : (
                      <div className="text-center p-4 bg-green-100 text-green-800 rounded-lg">
-                        <p className="font-bold text-lg">Great job! You've mastered word construction.</p>
+                        <p className="font-bold text-lg">Great job! You've mastered word construction. {l1Support && <span className="block text-sm mt-1">(Kerja yang baik! Anda telah menguasai pembinaan perkataan.)</span>}</p>
                     </div>
                 )}
             </section>
